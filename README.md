@@ -1,3 +1,12 @@
+[源项目]: https://github.com/wenzhixin/bootstrap-table-fixed-columns
+
+
+本项目 从 [源项目][] Fork 而来，旨在解决原项目的bug； 目前已经解决了如下 bug:
+
+# 已解决的问题
+- 通过 bootstrapTable 的 mergeCells 方法合并单元格时，冻结的列标题没有合并效果；
+
+
 # bootstrap-table-fixed-columns
 
 Fixed Columns extension of [bootstrap-table](https://github.com/wenzhixin/bootstrap-table)

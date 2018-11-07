@@ -1,6 +1,9 @@
 /**
- * @author zhixin wen <wenzhixin2010@gmail.com>
- * @version: v1.0.1
+ * @author 郭斌勇  <guobinyong@qq.com>
+ * @version: v1.0.2
+ *
+ * 修复了源项目的如下bug：
+ * - 通过 bootstrapTable 的 mergeCells 方法合并单元格时，冻结的列标题没有合并效果；
  */
 
 (function ($) {
