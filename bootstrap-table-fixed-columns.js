@@ -14,7 +14,30 @@
     var BootstrapTable = $.fn.bootstrapTable.Constructor,
         _initHeader = BootstrapTable.prototype.initHeader,
         _initBody = BootstrapTable.prototype.initBody,
-        _resetView = BootstrapTable.prototype.resetView;
+        _resetView = BootstrapTable.prototype.resetView,
+        //保存原来的 mergeCells 方法
+        _mergeCells = BootstrapTable.prototype.mergeCells;
+
+
+    BootstrapTable.prototype.mergeCells = function(){
+        _mergeCells.apply(this, Array.prototype.slice.apply(arguments));
+
+        this.specialInitForFixedColumns();
+    }
+
+
+    BootstrapTable.prototype.specialInitForFixedColumns = function(){
+        if (!this.options.fixedColumns) {
+            return;
+        }
+
+        this.initHeaderForFixedColumns();
+        this.resetViewForFixedColumns();
+        this.initBodyForFixedColumns();
+
+    };
+
+
 
     BootstrapTable.prototype.initFixedColumns = function () {
         this.$fixedHeader = $([
@@ -42,12 +65,8 @@
         this.$tableBody.before(this.$fixedBody);
     };
 
-    BootstrapTable.prototype.initHeader = function () {
-        _initHeader.apply(this, Array.prototype.slice.apply(arguments));
 
-        if (!this.options.fixedColumns) {
-            return;
-        }
+    BootstrapTable.prototype.initHeaderForFixedColumns = function () {
 
         this.initFixedColumns();
 
@@ -55,15 +74,25 @@
         $trs.each(function () {
             $(this).find('th:gt(' + that.options.fixedNumber + ')').remove();
         });
-        this.$fixedHeaderColumns.html('').append($trs); 
+        this.$fixedHeaderColumns.html('').append($trs);
     };
 
-    BootstrapTable.prototype.initBody = function () {
-        _initBody.apply(this, Array.prototype.slice.apply(arguments));
+
+    BootstrapTable.prototype.initHeader = function () {
+        _initHeader.apply(this, Array.prototype.slice.apply(arguments));
 
         if (!this.options.fixedColumns) {
             return;
         }
+
+        this.initHeaderForFixedColumns();
+    };
+
+
+
+
+
+    BootstrapTable.prototype.initBodyForFixedColumns = function () {
 
         var that = this,
             rowspan = 0;
@@ -83,11 +112,31 @@
                 $tr.append($tds.eq(i).clone());
             }
             that.$fixedBodyColumns.append($tr);
-            
+
             if ($tds.eq(0).attr('rowspan')){
-            	rowspan = $tds.eq(0).attr('rowspan') - 1;
+                rowspan = $tds.eq(0).attr('rowspan') - 1;
             }
         });
+    };
+
+    BootstrapTable.prototype.initBody = function () {
+        _initBody.apply(this, Array.prototype.slice.apply(arguments));
+
+        if (!this.options.fixedColumns) {
+            return;
+        }
+        this.initBodyForFixedColumns()
+    };
+
+
+
+    BootstrapTable.prototype.resetViewForFixedColumns = function () {
+
+        clearTimeout(this.timeoutHeaderColumns_);
+        this.timeoutHeaderColumns_ = setTimeout($.proxy(this.fitHeaderColumns, this), this.$el.is(':hidden') ? 100 : 0);
+
+        clearTimeout(this.timeoutBodyColumns_);
+        this.timeoutBodyColumns_ = setTimeout($.proxy(this.fitBodyColumns, this), this.$el.is(':hidden') ? 100 : 0);
     };
 
     BootstrapTable.prototype.resetView = function () {
@@ -96,12 +145,7 @@
         if (!this.options.fixedColumns) {
             return;
         }
-
-        clearTimeout(this.timeoutHeaderColumns_);
-        this.timeoutHeaderColumns_ = setTimeout($.proxy(this.fitHeaderColumns, this), this.$el.is(':hidden') ? 100 : 0);
-
-        clearTimeout(this.timeoutBodyColumns_);
-        this.timeoutBodyColumns_ = setTimeout($.proxy(this.fitBodyColumns, this), this.$el.is(':hidden') ? 100 : 0);
+        this.resetViewForFixedColumns();
     };
 
     BootstrapTable.prototype.fitHeaderColumns = function () {
