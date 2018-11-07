@@ -21,19 +21,22 @@
         //保存原来的 mergeCells 方法
         _mergeCells = BootstrapTable.prototype.mergeCells;
 
-
+    //重载 mergeCells 方法
     BootstrapTable.prototype.mergeCells = function(){
         _mergeCells.apply(this, Array.prototype.slice.apply(arguments));
 
+        //在 mergeCells 方法被调用后，初始化对冻结列进行初始化
         this.specialInitForFixedColumns();
     }
 
 
+    //固定列的单独初始化方法
     BootstrapTable.prototype.specialInitForFixedColumns = function(){
         if (!this.options.fixedColumns) {
             return;
         }
 
+        //根据源项目的实际调用顺序来设置以下3个方法的调用顺序
         this.initHeaderForFixedColumns();
         this.resetViewForFixedColumns();
         this.initBodyForFixedColumns();
