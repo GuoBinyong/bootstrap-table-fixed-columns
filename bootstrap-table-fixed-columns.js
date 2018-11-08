@@ -4,6 +4,17 @@
  *
  * 修复了源项目的如下bug：
  * - 通过 bootstrapTable 的 mergeCells 方法合并单元格时，冻结的列标题没有合并效果；
+ * - 修复了单元格跨行合并时，冻结的列标题的所有列都会进行相应的行合并的bug；
+ * - 优化了部分代码；
+ *
+ * # 新增方法
+ * 我给 bootstrapTable 增加了如下方法：
+ *
+ * - 冻结列：
+ * ```
+ * $('#table').bootstrapTable('fixedColumns', fixedNumber);
+ * @param fixedNumber : number 冻结的列数
+ * ```
  */
 
 (function ($) {
@@ -114,23 +125,15 @@
 
         this.$fixedBodyColumns.html('');
         this.$body.find('> tr[data-index]').each(function () {
-            var $tr = $(this).clone(),
-                $tds = $tr.find('td');
+            var $tr = $(this).clone();
 
             $tr.html('');
             var end = that.options.fixedNumber;
-            if (rowspan > 0) {
-                --end;
-                --rowspan;
-            }
+
             for (var i = 0; i < end; i++) {
                 $tr.append($tds.eq(i).clone());
             }
             that.$fixedBodyColumns.append($tr);
-
-            if ($tds.eq(0).attr('rowspan')){
-                rowspan = $tds.eq(0).attr('rowspan') - 1;
-            }
         });
     };
 
