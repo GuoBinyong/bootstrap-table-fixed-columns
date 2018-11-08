@@ -7,6 +7,16 @@
 - 通过 bootstrapTable 的 mergeCells 方法合并单元格时，冻结的列标题没有合并效果；
 
 
+# 新增方法
+我给 bootstrapTable 增加了如下方法：
+
+**冻结列：**  
+```
+$('#table').bootstrapTable('fixedColumns', fixedNumber);
+@param fixedNumber : number 冻结的列数
+```
+
+
 # bootstrap-table-fixed-columns
 
 Fixed Columns extension of [bootstrap-table](https://github.com/wenzhixin/bootstrap-table)

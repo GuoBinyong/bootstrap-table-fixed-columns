@@ -26,12 +26,21 @@
         _mergeCells.apply(this, Array.prototype.slice.apply(arguments));
 
         //在 mergeCells 方法被调用后，初始化对冻结列进行初始化
-        this.specialInitForFixedColumns();
+        this.fixedColumns();
     }
 
 
-    //固定列的单独初始化方法
-    BootstrapTable.prototype.specialInitForFixedColumns = function(){
+    /**
+     * 冻结列
+     * @param fixedNumber : number 冻结的列数
+     */
+    BootstrapTable.prototype.fixedColumns = function(fixedNumber){
+
+        if  (fixedNumber != null){
+            this.options.fixedColumns = true ;
+            this.options.fixedNumber = fixedNumber ;
+        }
+
         if (!this.options.fixedColumns) {
             return;
         }
@@ -223,5 +232,15 @@
             that.$body.find('> tr[data-index="' + index + '"]').removeClass('hover');
         });
     };
+
+
+
+    //
+
+    /**
+     * 往 bootstrapTable 中注入新的方法 fixedColumns
+     * 参数是 fixedNumber ，数字类型，表示冻结的列数
+     */
+    $.fn.bootstrapTable.methods.push("fixedColumns")
 
 })(jQuery);
