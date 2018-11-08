@@ -120,16 +120,15 @@
 
     BootstrapTable.prototype.initBodyForFixedColumns = function () {
 
-        var that = this,
-            rowspan = 0;
+        var that = this;
 
         this.$fixedBodyColumns.html('');
         this.$body.find('> tr[data-index]').each(function () {
-            var $tr = $(this).clone();
+            var $tr = $(this).clone(),
+                $tds = $tr.find('td');
 
             $tr.html('');
             var end = that.options.fixedNumber;
-
             for (var i = 0; i < end; i++) {
                 $tr.append($tds.eq(i).clone());
             }
