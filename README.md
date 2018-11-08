@@ -5,7 +5,6 @@
 
 # 已解决的问题
 - 通过 bootstrapTable 的 mergeCells 方法合并单元格时，冻结的列标题没有合并效果；
-- 通过 bootstrapTable 的 mergeCells 方法合并单元格时，冻结的列标题没有合并效果；
 - 修复了单元格跨行合并时，冻结的列标题的所有列都会进行相应的行合并的bug；
 - 优化了部分代码；
 
