@@ -6,6 +6,7 @@
  * - 通过 bootstrapTable 的 mergeCells 方法合并单元格时，冻结的列标题没有合并效果；
  * - 修复了单元格跨行合并时，冻结的列标题的所有列都会进行相应的行合并的bug；
  * - 优化了部分代码；
+ * - 修复了改变窗口尺寸时，冻结的列不会自动调整大小的bug;
  *
  * # 新增方法
  * 我给 bootstrapTable 增加了如下方法：
@@ -28,9 +29,14 @@
     var BootstrapTable = $.fn.bootstrapTable.Constructor,
         _initHeader = BootstrapTable.prototype.initHeader,
         _initBody = BootstrapTable.prototype.initBody,
-        _resetView = BootstrapTable.prototype.resetView,
-        //保存原来的 mergeCells 方法
-        _mergeCells = BootstrapTable.prototype.mergeCells;
+        _resetView = BootstrapTable.prototype.resetView;
+
+
+
+    //重载mergeCells：开始
+
+    //保存原来的 mergeCells 方法
+    var _mergeCells = BootstrapTable.prototype.mergeCells;
 
     //重载 mergeCells 方法
     BootstrapTable.prototype.mergeCells = function(){
@@ -39,6 +45,30 @@
         //在 mergeCells 方法被调用后，初始化对冻结列进行初始化
         this.fixedColumns();
     }
+    //重载mergeCells：结束
+
+
+
+
+
+    //重载resetWidth：开始
+    var _resetWidth = BootstrapTable.prototype.resetWidth;
+
+    BootstrapTable.prototype.resetWidth = function(){
+
+        _resetWidth.apply(this, Array.prototype.slice.apply(arguments));
+
+        if (!this.options.fixedColumns) {
+            return;
+        }
+
+        this.resetViewForFixedColumns();
+    }
+
+    //重载resetWidth：结束
+
+
+
 
 
     /**
