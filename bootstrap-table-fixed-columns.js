@@ -94,32 +94,71 @@
     };
 
 
+    /*
+
+        BootstrapTable.prototype.initFixedColumns = function () {
+            this.$fixedHeader = $([
+                '<div class="fixed-table-header-columns">',
+                '<table>',
+                '<thead></thead>',
+                '</table>',
+                '</div>'].join(''));
+
+            this.timeoutHeaderColumns_ = 0;
+            this.$fixedHeader.find('table').attr('class', this.$el.attr('class'));
+            this.$fixedHeaderColumns = this.$fixedHeader.find('thead');
+            this.$tableHeader.before(this.$fixedHeader);
+
+            this.$fixedBody = $([
+                '<div class="fixed-table-body-columns">',
+                '<table>',
+                '<tbody></tbody>',
+                '</table>',
+                '</div>'].join(''));
+
+            this.timeoutBodyColumns_ = 0;
+            this.$fixedBody.find('table').attr('class', this.$el.attr('class'));
+            this.$fixedBodyColumns = this.$fixedBody.find('tbody');
+            this.$tableBody.before(this.$fixedBody);
+        };
+    */
 
     BootstrapTable.prototype.initFixedColumns = function () {
-        this.$fixedHeader = $([
-            '<div class="fixed-table-header-columns">',
-            '<table>',
-            '<thead></thead>',
-            '</table>',
-            '</div>'].join(''));
+        this.$fixedHeader = $('<div class="fixed-table-header-columns">');
+
+        var tableHeader = this.$tableHeader.children("table");
+        var tableHeaderClone = tableHeader.clone(true);
+        tableHeaderClone.addClass(this.$el.attr('class'));
+
+        var headerClone = this.$header.clone(true);
+        tableHeaderClone.append(headerClone);
+        this.$fixedHeader.append(tableHeaderClone);
+
 
         this.timeoutHeaderColumns_ = 0;
-        this.$fixedHeader.find('table').attr('class', this.$el.attr('class'));
-        this.$fixedHeaderColumns = this.$fixedHeader.find('thead');
+
+        this.$fixedHeaderColumns = headerClone;
         this.$tableHeader.before(this.$fixedHeader);
 
-        this.$fixedBody = $([
-            '<div class="fixed-table-body-columns">',
-            '<table>',
-            '<tbody></tbody>',
-            '</table>',
-            '</div>'].join(''));
+
+
+        this.$fixedBody = $('<div class="fixed-table-body-columns">');
+
+        var fixedBodyTable = $('<table>');
+        fixedBodyTable.addClass(this.$el.attr('class'));
+
+        this.$fixedBodyColumns = $('<tbody>');
+
+        fixedBodyTable.append(this.$fixedBodyColumns);
+        this.$fixedBody.append(fixedBodyTable);
+
+
 
         this.timeoutBodyColumns_ = 0;
-        this.$fixedBody.find('table').attr('class', this.$el.attr('class'));
-        this.$fixedBodyColumns = this.$fixedBody.find('tbody');
         this.$tableBody.before(this.$fixedBody);
     };
+
+
 
 
     BootstrapTable.prototype.initHeaderForFixedColumns = function () {
